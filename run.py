@@ -4,10 +4,10 @@ from statistics import mean, stdev
 
 keys = ["throughput"]
 
-src = "./src/locking_scheme.{}"
+src = "./locking_scheme.{}"
 lock = "ticket"
 
-duration = 2000 #10000
+duration = 10000
 points = [500, 1000, 5000, 10000, 50000, 100000]
 parallel_factors = [0.1, 0.5, 1, 2, 4, 5, 10, 15, 20, 25, 30, 35, 40, 50, 80, 100]
 critical_factors = [1. / 80, 1. / 50, 1. / 30, 1. / 10, 1. / 4, 1. / 2, 1, 2, 4] #[5, 10, 15, 20, 25, 30]
@@ -28,8 +28,8 @@ def run_one(duration, proc, critical, parallel, lock):
     os.system(command)
 
 def run():
-    if not os.path.isdir("out/log_gi/d{}".format(duration)):
-        os.makedirs("out/log_gi/d{}".format(duration))
+    if not os.path.isdir("out/log/d{}".format(duration)):
+        os.makedirs("out/log/d{}".format(duration))
 
     for p in proc:
         for first in points:
@@ -106,7 +106,7 @@ def data(key):
 lock = sys.argv[2]
 src = src.format(lock)
 
-
+compile()
 
 if sys.argv[1] == "run":
     run()
