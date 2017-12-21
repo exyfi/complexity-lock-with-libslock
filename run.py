@@ -61,27 +61,41 @@ def parse(filename):
 def data_file(duration, key, t, proc, point, lock):
     return "data/d{}/{}/{}_{}_{}_{}.dat".format(duration, key, t, proc, point, lock)
 
+def queue(P, C, T):
+    return max(T - 1. * P / C, 1)
+
+def theoretical_throughput(P, C, T, alpha):
+    return alpha * T / (C * queue(P, C, T) + P)
+
 def data(key):
     if not os.path.isdir("data/d{}/{}".format(duration, key)):
         os.makedirs("data/d{}/{}".format(duration, key))
     if key == "theoretical_throughput":
+        Cinf = max(points)
+        Pinf = int(max(parallel_factors) * Cinf)
+        Tinf = max(proc)
+        THRinf = mean(parse(log_file(duration, Tinf, Cinf, Pinf, lock))["throughput"])
+        alpha = THRinf * (Cinf + Pinf) / Tinf
+
         for p in proc:
             for first in points:
                 out = open(data_file(duration, key, "critical", p, first, lock), 'w')
-                betas = []
 
                 for factor in parallel_factors:
                     critical = first
                     parallel = int(factor * first)
-                    out.write("{} {}\n".format(parallel, max(p - parallel / critical, 1)))
+                    t = theoretical_throughput(parallel, critical, p, alpha)
+
+                    out.write("{} {}\n".format(parallel, t))
                 out.close()
 
                 out = open(data_file(duration, key, "parallel", p, first, lock), 'w')
                 for factor in critical_factors:
                     critical = int(factor * first)
                     parallel = first
-                    parallel = first
-                    out.write("{} {}\n".format(critical, max(p - parallel / critical, 1)))
+                    t = theoretical_throughput(parallel, critical, p, alpha)
+
+                    out.write("{} {}\n".format(critical, t))
 
                 out.close()
     else:
