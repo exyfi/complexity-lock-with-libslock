@@ -106,9 +106,8 @@ def data(key):
 lock = sys.argv[2]
 src = src.format(lock)
 
-compile()
-
 if sys.argv[1] == "run":
+    compile()
     run()
 if sys.argv[1] == "data":
     for i in range(3, len(sys.argv)):
