@@ -104,7 +104,7 @@ def fit_throughput():
     return
 
 def get_alpha():
-    Cinf = max(points)
+    Cinf = max(critical_points)
     Pinf = int(max(parallel_factors) * Cinf)
     Tinf = max(proc)
     THRinf = mean(parse(log_file(duration, Tinf, Cinf, Pinf, lock))["throughput"])
