@@ -1,5 +1,6 @@
 import os
 import sys
+from math import sqrt
 from statistics import mean, stdev
 from gplearn.genetic import SymbolicRegressor
 
@@ -11,7 +12,7 @@ lock = "ticket"
 duration = 10000
 parallel_points = [500, 1000, 5000, 10000, 50000, 100000]
 critical_points = [100, 500, 1000, 5000, 10000, 50000, 100000]
-parallel_factors = [0.1, 0.5, 1, 2, 4, 5, 10, 15, 20, 25, 30, 35, 40, 50, 80, 100]
+parallel_factors = [0.1, 0.5, 1, 2, 4, 5, 10, 15, 20, 25, 30, 35, 40, 50, 80, 100, 200]
 critical_factors = [1. / 80, 1. / 50, 1. / 30, 1. / 10, 1. / 4, 1. / 2, 1, 2, 4] #[5, 10, 15, 20, 25, 30]
 proc = [5, 10, 20, 30, 39]
 
@@ -44,6 +45,9 @@ def run():
                 # change critical
                 run_one(duration, p, int(factor * first), first, lock)
 
+def exists(C, P, T, lock):
+    return os.path.isfile(log_file(duration, T, C, P, lock))
+
 def parse(filename):
     inf = open(filename, 'r')
     values = dict()
@@ -71,6 +75,10 @@ def all_throughputs():
             for factor in parallel_factors:
                 critical = first
                 parallel = int(factor * first)
+
+                if not exists(critical, parallel, p, lock):
+                    continue
+
                 t = mean(parse(log_file(duration, p, critical, parallel, lock))["throughput"])
                 throughputs[(critical, parallel, p)] = t
 
@@ -78,6 +86,10 @@ def all_throughputs():
             for factor in critical_factors:
                 critical = int(factor * first)
                 parallel = first
+
+                if not exists(critical, parallel, p, lock):
+                    continue
+
                 t = mean(parse(log_file(duration, p, critical, parallel, lock))["throughput"])
                 throughputs[(critical, parallel, p)] = t
     return
@@ -105,7 +117,8 @@ def fit_throughput():
 
 def get_alpha():
     Cinf = max(critical_points)
-    Pinf = int(max(parallel_factors) * Cinf)
+#    Pinf = int(max(parallel_factors) * Cinf)
+    Pinf = int(100 * Cinf)
     Tinf = max(proc)
     THRinf = mean(parse(log_file(duration, Tinf, Cinf, Pinf, lock))["throughput"])
     return THRinf * (Cinf + Pinf) / Tinf
@@ -114,10 +127,21 @@ def queue(C, P, T):
     return max(T - 1. * P / C, 1)
 
 def theoretical_throughput(C, P, T, alpha):
-#    return alpha * T / (C * queue(C, P, T) + P + 300 * T)
     B = 380
-    return alpha * T / ((C + B) * queue(C + B, P, T) + P)
-#    return alpha * T / max(C + P, C * T + 436 * (T - 1))
+
+    SC = 100
+    UC = 20
+    As = UC
+    Bs = SC - (T + 1) * UC - UC
+    Cs = (T + 1) * UC - (T + 1) * SC + (P + (C + B) + SC)
+    Ds = Bs * Bs - 4 * As * Cs
+    if Ds > 0:
+        Q = (-Bs + sqrt(Ds)) / (2 * As)
+#        if Q < T and Q > 1 and (Q - 1) * UC < C + B:
+#            print("YEAH! " + str(C) + " " + str(P) + " " + str(T) + " " + str(Q) + " " + str(T + 1 - (P + C + B + SC) / (SC + (Q - 1) * UC)))
+#            return alpha / (SC + (Q - 1) * UC)
+
+    return alpha * T / max(T * (C + B), P + C + B)
 
 # THR = (alpha T) / (C * Q(P, C, T) + P + T beta)
 def beta(C, P, T, THR, alpha):                  
@@ -134,20 +158,25 @@ def data(key):
         alpha = get_alpha()
         print(alpha)
 
-#        for triplet in throughputs:
-#            print(str(triplet[0]) + " " + str(triplet[1]) + " " + str(triplet[2]) + " " + str(throughputs[triplet]))
-
         for triplet in throughputs:
-            print(str(triplet) + " " + str(beta(triplet[0], triplet[1], triplet[2], throughputs[triplet], alpha)))
-            print(str(triplet) + " " + str(throughputs[triplet]) + " " + str(theoretical_throughput(triplet[0], triplet[1], triplet[2], alpha)))
+            print(str(triplet[0]) + " " + str(triplet[1]) + " " + str(triplet[2]) + " " + str(throughputs[triplet]))
+
+#        for triplet in throughputs:
+#            print(str(triplet) + " " + str(beta(triplet[0], triplet[1], triplet[2], throughputs[triplet], alpha)))
+#            print(str(triplet) + " " + str(throughputs[triplet]) + " " + str(theoretical_throughput(triplet[0], triplet[1], triplet[2], alpha)))
                                      
         for p in proc:
             for first in critical_points:
-                out = open(data_file(duration, key, "critical", p, first, lock), 'w')
+                dfile = data_file(duration, key, "critical", p, first, lock)
+                out = open(dfile, 'w')
 
                 for factor in parallel_factors:
                     critical = first
                     parallel = int(factor * first)
+
+                    if not exists(critical, parallel, p, lock):
+                        continue
+
                     t = theoretical_throughput(critical, parallel, p, alpha)
 
                     out.write("{} {}\n".format(parallel, t))
@@ -158,6 +187,10 @@ def data(key):
                 for factor in critical_factors:
                     critical = int(factor * first)
                     parallel = first
+
+                    if not exists(critical, parallel, p, lock):
+                        continue
+
                     t = theoretical_throughput(critical, parallel, p, alpha)
 
                     out.write("{} {}\n".format(critical, t))
@@ -170,6 +203,10 @@ def data(key):
                 for factor in parallel_factors:
                     critical = first
                     parallel = int(factor * first)
+
+                    if not exists(critical, parallel, p, lock):
+                        continue
+
                     res = parse(log_file(duration, p, critical, parallel, lock))[key]
                     out.write("{} {}\n".format(parallel, mean(res)))
                 out.close()
@@ -179,6 +216,10 @@ def data(key):
                 for factor in critical_factors:
                     critical = int(factor * first)
                     parallel = first
+
+                    if not exists(critical, parallel, p, lock):
+                        continue
+
                     res = parse(log_file(duration, p, critical, parallel, lock))[key]
                     out.write("{} {}\n".format(critical, mean(res)))
                 out.close()
