@@ -1,0 +1,219 @@
+\documentclass{standalone}
+\usepackage{tikz} 
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\renewcommand{\baselinestretch}{0.5}
+
+\usepackage{amssymb,amscd,amsmath, cite,multirow,tikz,pgfplots,comment}
+
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{matrix}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=newest}
+
+\begin{document}
+
+\begin{tikzpicture}
+   \begin{groupplot}[
+       group style={
+           group size= 7 by 5,
+       },
+       height=5cm,
+       width=5cm,
+   ]
+
+   \nextgroupplot[title=Critical work: 100,
+                  ylabel={Processors: 5},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_5_100_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_5_500_mcs.dat};
+       \draw ({axis cs:400,0}|-{rel axis cs:0,1}) -- ({axis cs:400,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[title=Critical work: 500, cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_5_500_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_5_500_mcs.dat};
+       \draw ({axis cs:2000,0}|-{rel axis cs:0,1}) -- ({axis cs:2000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[title=Critical work: 1000, cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_5_1000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_5_1000_mcs.dat};
+       \draw ({axis cs:4000,0}|-{rel axis cs:0,0}) -- ({axis cs:4000,0}|-{rel axis cs:0,1});
+
+   \nextgroupplot[title=Critical work: 5000, cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_5_5000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_5_5000_mcs.dat};
+       \draw ({axis cs:20000,0}|-{rel axis cs:0,0}) -- ({axis cs:20000,0}|-{rel axis cs:0,1});
+
+   \nextgroupplot[title=Critical work: 10000, cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_5_10000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_5_10000_mcs.dat};
+       \draw ({axis cs:40000,0}|-{rel axis cs:0,0}) -- ({axis cs:40000,0}|-{rel axis cs:0,1});
+
+   \nextgroupplot[title=Critical work: 50000, cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_5_50000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_5_50000_mcs.dat};
+       \draw ({axis cs:200000,0}|-{rel axis cs:0,0}) -- ({axis cs:200000,0}|-{rel axis cs:0,1});
+
+   \nextgroupplot[title=Critical work: 100000, cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_5_100000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_5_100000_mcs.dat};
+       \draw ({axis cs:400000,0}|-{rel axis cs:0,0}) -- ({axis cs:400000,0}|-{rel axis cs:0,1});
+
+
+
+   \nextgroupplot[ylabel={Processors: 10},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_10_100_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_10_100_mcs.dat};
+       \draw ({axis cs:900,0}|-{rel axis cs:0,1}) -- ({axis cs:900,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_10_500_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_10_500_mcs.dat};
+       \draw ({axis cs:4500,0}|-{rel axis cs:0,1}) -- ({axis cs:4500,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_10_1000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_10_1000_mcs.dat};
+       \draw ({axis cs:9000,0}|-{rel axis cs:0,1}) -- ({axis cs:9000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_10_5000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_10_5000_mcs.dat};
+       \draw ({axis cs:45000,0}|-{rel axis cs:0,1}) -- ({axis cs:45000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_10_10000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_10_10000_mcs.dat};
+       \draw ({axis cs:90000,0}|-{rel axis cs:0,1}) -- ({axis cs:90000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_10_50000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_10_50000_mcs.dat};
+       \draw ({axis cs:450000,0}|-{rel axis cs:0,1}) -- ({axis cs:450000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_10_100000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_10_100000_mcs.dat};
+       \draw ({axis cs:900000,0}|-{rel axis cs:0,1}) -- ({axis cs:900000,0}|-{rel axis cs:0,0});
+
+
+
+   \nextgroupplot[ylabel={Processors: 20},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_20_100_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_20_100_mcs.dat};
+       \draw ({axis cs:1900,0}|-{rel axis cs:0,1}) -- ({axis cs:1900,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_20_500_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_20_500_mcs.dat};
+       \draw ({axis cs:9500,0}|-{rel axis cs:0,1}) -- ({axis cs:9500,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_20_1000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_20_1000_mcs.dat};
+       \draw ({axis cs:19000,0}|-{rel axis cs:0,1}) -- ({axis cs:19000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_20_5000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_20_5000_mcs.dat};
+       \draw ({axis cs:95000,0}|-{rel axis cs:0,1}) -- ({axis cs:95000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_20_10000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_20_10000_mcs.dat};
+       \draw ({axis cs:190000,0}|-{rel axis cs:0,1}) -- ({axis cs:190000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_20_50000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_20_50000_mcs.dat};
+       \draw ({axis cs:950000,0}|-{rel axis cs:0,1}) -- ({axis cs:950000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_20_100000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_20_100000_mcs.dat};
+       \draw ({axis cs:1900000,0}|-{rel axis cs:0,1}) -- ({axis cs:1900000,0}|-{rel axis cs:0,0});
+
+
+
+   \nextgroupplot[ylabel={Processors: 30},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_30_100_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_30_100_mcs.dat};
+       \draw ({axis cs:2900,0}|-{rel axis cs:0,1}) -- ({axis cs:2900,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_30_500_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_30_500_mcs.dat};
+       \draw ({axis cs:14500,0}|-{rel axis cs:0,1}) -- ({axis cs:14500,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_30_1000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_30_1000_mcs.dat};
+       \draw ({axis cs:29000,0}|-{rel axis cs:0,1}) -- ({axis cs:29000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_30_5000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_30_5000_mcs.dat};
+       \draw ({axis cs:145000,0}|-{rel axis cs:0,1}) -- ({axis cs:145000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_30_10000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_30_10000_mcs.dat};
+       \draw ({axis cs:290000,0}|-{rel axis cs:0,1}) -- ({axis cs:290000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_30_50000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_30_50000_mcs.dat};
+       \draw ({axis cs:1450000,0}|-{rel axis cs:0,1}) -- ({axis cs:1450000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_30_100000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_30_100000_mcs.dat};
+       \draw ({axis cs:2900000,0}|-{rel axis cs:0,1}) -- ({axis cs:2900000,0}|-{rel axis cs:0,0});
+
+
+
+   \nextgroupplot[ylabel={Processors: 39},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_39_100_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_39_100_mcs.dat};
+       \draw ({axis cs:3800,0}|-{rel axis cs:0,1}) -- ({axis cs:3800,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_39_500_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_39_500_mcs.dat};
+       \draw ({axis cs:19000,0}|-{rel axis cs:0,1}) -- ({axis cs:19000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_39_1000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_39_1000_mcs.dat};
+       \draw ({axis cs:38000,0}|-{rel axis cs:0,1}) -- ({axis cs:38000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_39_5000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_39_5000_mcs.dat};
+       \draw ({axis cs:190000,0}|-{rel axis cs:0,1}) -- ({axis cs:190000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_39_10000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_39_10000_mcs.dat};
+       \draw ({axis cs:380000,0}|-{rel axis cs:0,1}) -- ({axis cs:380000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_39_50000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_39_50000_mcs.dat};
+       \draw ({axis cs:1900000,0}|-{rel axis cs:0,1}) -- ({axis cs:1900000,0}|-{rel axis cs:0,0});
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/critical_39_100000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/critical_39_100000_mcs.dat};
+       \draw ({axis cs:3800000,0}|-{rel axis cs:0,1}) -- ({axis cs:3800000,0}|-{rel axis cs:0,0});
+  \end{groupplot}
+\end{tikzpicture}
+
+
+\end{document}
