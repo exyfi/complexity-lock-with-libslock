@@ -127,21 +127,21 @@ def queue(C, P, T):
     return max(T - 1. * P / C, 1)
 
 def theoretical_throughput(C, P, T, alpha):
-    B = 380
+    M = 380
+    X = 500
+    Cc = C + M
 
-    SC = 100
-    UC = 20
-    As = UC
-    Bs = SC - (T + 1) * UC - UC
-    Cs = (T + 1) * UC - (T + 1) * SC + (P + (C + B) + SC)
-    Ds = Bs * Bs - 4 * As * Cs
-    if Ds > 0:
-        Q = (-Bs + sqrt(Ds)) / (2 * As)
-#        if Q < T and Q > 1 and (Q - 1) * UC < C + B:
-#            print("YEAH! " + str(C) + " " + str(P) + " " + str(T) + " " + str(Q) + " " + str(T + 1 - (P + C + B + SC) / (SC + (Q - 1) * UC)))
-#            return alpha / (SC + (Q - 1) * UC)
-
-    return alpha * T / max(T * (C + B), P + C + B)
+    if X > Cc:
+        if (T - 1) * X > P + Cc:
+            print(str(C) + " " + str(P) + " " + str(T) + " " + str(alpha / X))
+            return alpha / X
+        else:
+            return alpha * T / (P + Cc + X)
+    else:
+        if (T - 1) * Cc > P + X:
+            return alpha / Cc
+        else:
+            return alpha * T / (P + Cc + X)
 
 # THR = (alpha T) / (C * Q(P, C, T) + P + T beta)
 def beta(C, P, T, THR, alpha):                  
@@ -158,8 +158,8 @@ def data(key):
         alpha = get_alpha()
         print(alpha)
 
-        for triplet in throughputs:
-            print(str(triplet[0]) + " " + str(triplet[1]) + " " + str(triplet[2]) + " " + str(throughputs[triplet]))
+#        for triplet in throughputs:
+#            print(str(triplet[0]) + " " + str(triplet[1]) + " " + str(triplet[2]) + " " + str(throughputs[triplet]))
 
 #        for triplet in throughputs:
 #            print(str(triplet) + " " + str(beta(triplet[0], triplet[1], triplet[2], throughputs[triplet], alpha)))
