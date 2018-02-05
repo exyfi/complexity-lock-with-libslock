@@ -2,7 +2,7 @@ import os
 import sys
 from math import sqrt
 from statistics import mean, stdev
-from gplearn.genetic import SymbolicRegressor
+#from gplearn.genetic import SymbolicRegressor
 
 keys = ["throughput"]
 
@@ -126,14 +126,36 @@ def get_alpha():
 def queue(C, P, T):
     return max(T - 1. * P / C, 1)
 
-def theoretical_throughput(C, P, T, alpha):
-    M = 380
-    X = 500
+def get_M_and_X(alpha):
+    best = 1000000000000
+    best_M = 0
+    best_X = 0
+    for M in range(0, 1000, 10):
+        if M % 100 == 0:
+            print(M)
+        for X in range(0, 1000, 10):
+            error = 0
+            for setting in throughputs:
+                if setting[0] < 500:
+                   continue
+                real = throughputs[setting]
+                theory = theoretical_throughput_full(setting[0], setting[1], setting[2], alpha, M, X)               
+                error += abs(real - theory) / real
+                if error > best:
+                    break
+            if error < best:
+                best = error
+                best_M = M
+                best_X = X
+#    print(best)
+    return (best_M, best_X)
+
+def theoretical_throughput_full(C, P, T, alpha, M, X):
     Cc = C + M
 
     if X > Cc:
         if (T - 1) * X > P + Cc:
-            print(str(C) + " " + str(P) + " " + str(T) + " " + str(alpha / X))
+#            print(str(C) + " " + str(P) + " " + str(T) + " " + str(alpha / X))
             return alpha / X
         else:
             return alpha * T / (P + Cc + X)
@@ -142,6 +164,9 @@ def theoretical_throughput(C, P, T, alpha):
             return alpha / Cc
         else:
             return alpha * T / (P + Cc + X)
+
+def theoretical_throughput(C, P, T, alpha):
+    return theoretical_throughput_full(C, P, T, alpha, 380, 500)
 
 # THR = (alpha T) / (C * Q(P, C, T) + P + T beta)
 def beta(C, P, T, THR, alpha):                  
@@ -157,6 +182,9 @@ def data(key):
     if key == "theoretical_throughput":
         alpha = get_alpha()
         print(alpha)
+
+        (M, X) = get_M_and_X(alpha)
+        print(str(M) + " " + str(X))
 
 #        for triplet in throughputs:
 #            print(str(triplet[0]) + " " + str(triplet[1]) + " " + str(triplet[2]) + " " + str(throughputs[triplet]))
