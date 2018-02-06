@@ -126,47 +126,57 @@ def get_alpha():
 def queue(C, P, T):
     return max(T - 1. * P / C, 1)
 
-def get_M_and_X(alpha):
-    best = 1000000000000
-    best_M = 0
-    best_X = 0
-    for M in range(0, 1000, 10):
-        if M % 100 == 0:
-            print(M)
-        for X in range(0, 1000, 10):
-            error = 0
-            for setting in throughputs:
-                if setting[0] < 500:
-                   continue
-                real = throughputs[setting]
-                theory = theoretical_throughput_full(setting[0], setting[1], setting[2], alpha, M, X)               
-                error += abs(real - theory) / real
-                if error > best:
-                    break
-            if error < best:
-                best = error
-                best_M = M
-                best_X = X
-#    print(best)
-    return (best_M, best_X)
+def get_M1_and_M2_and_X(alpha):
+    filtered_throughputs = {}
+    for setting in throughputs:
+        if setting[0] != 500:
+            continue
+        filtered_throughputs[setting] = throughputs[setting]
 
-def theoretical_throughput_full(C, P, T, alpha, M, X):
-    Cc = C + M
+    best = 1000000000000
+    best_M1 = 0
+    best_M2 = 0
+    best_X = 0
+    for M1 in range(0, 1000, 15):
+        if M1 % 100 == 0:
+            print("First loop " + str(M1))
+        for M2 in range(0, 1000, 15):
+            if M2 % 100 == 0:
+                print("Second loop " + str(M2))
+            for X in range(0, 1000, 15):
+                error = 0
+                for setting in filtered_throughputs:              
+                    real = throughputs[setting]
+                    theory = theoretical_throughput_full(setting[0], setting[1], setting[2], alpha, M1, M2, X)
+                    error += abs(real - theory) / real
+                    if error > best:
+                        break
+                if error < best:
+                    best = error
+                    best_M1 = M1
+                    best_M2 = M2
+                    best_X = X
+    print(best)
+    return (best_M1, best_M2, best_X)
+
+def theoretical_throughput_full(C, P, T, alpha, M1, M2,  X):
+    Cc = C + M1
+    Pp = P + M2
 
     if X > Cc:
-        if (T - 1) * X > P + Cc:
+        if (T - 1) * X > Pp + Cc:
 #            print(str(C) + " " + str(P) + " " + str(T) + " " + str(alpha / X))
             return alpha / X
         else:
-            return alpha * T / (P + Cc + X)
+            return alpha * T / (Pp + Cc + X)
     else:
-        if (T - 1) * Cc > P + X:
+        if (T - 1) * Cc > Pp + X:
             return alpha / Cc
         else:
-            return alpha * T / (P + Cc + X)
+            return alpha * T / (Pp + Cc + X)
 
 def theoretical_throughput(C, P, T, alpha):
-    return theoretical_throughput_full(C, P, T, alpha, 380, 500)
+    return theoretical_throughput_full(C, P, T, alpha, 380, 0, 500)
 
 # THR = (alpha T) / (C * Q(P, C, T) + P + T beta)
 def beta(C, P, T, THR, alpha):                  
@@ -183,8 +193,8 @@ def data(key):
         alpha = get_alpha()
         print(alpha)
 
-        (M, X) = get_M_and_X(alpha)
-        print(str(M) + " " + str(X))
+        (M1, M2, X) = get_M1_and_M2_and_X(alpha)
+        print(str(M1) + " " + str(M2) + " " + str(X))
 
 #        for triplet in throughputs:
 #            print(str(triplet[0]) + " " + str(triplet[1]) + " " + str(triplet[2]) + " " + str(throughputs[triplet]))
@@ -225,6 +235,7 @@ def data(key):
 
                 out.close()
     else:
+        # p and critical are fixed
         for p in proc:
             for first in critical_points:
                 out = open(data_file(duration, key, "critical", p, first, lock), 'w')
@@ -239,6 +250,8 @@ def data(key):
                     out.write("{} {}\n".format(parallel, mean(res)))
                 out.close()
 
+        # p and parallel are fixed
+        for p in proc:
             for first in parallel_points:
                 out = open(data_file(duration, key, "parallel", p, first, lock), 'w')
                 for factor in critical_factors:
@@ -251,6 +264,19 @@ def data(key):
                     res = parse(log_file(duration, p, critical, parallel, lock))[key]
                     out.write("{} {}\n".format(critical, mean(res)))
                 out.close()
+
+        # critical and parallel are fixed
+        for first in critical_points:
+            for factor in parallel_factors:
+                critical = first
+                parallel = int(factor * first)
+                out = open(data_file(duration, key, "processes", first, factor, lock), 'w')
+                for p in proc:
+                    if not exists(critical, parallel, p, lock):
+                        continue
+
+                    res = parse(log_file(duration, p, critical, parallel, lock))[key]
+                    out.write("{} {}\n".format(p, mean(res)))
     return
 
 lock = sys.argv[2]
