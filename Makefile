@@ -38,6 +38,12 @@ INCLUDES := -I $(INCLUDE_LIBSLOCK) -I $(SRC_LIBSLOCK) -I $(INCLUDE)
 
 MAIN_PART := $(GCC)  $(COMPILE_FLAGS) $(LIBS) $(INCLUDES)
 
+spinlock: src/locking_scheme.cpp
+	$(MAIN_PART) -DUSE_SPINLOCK_LOCKS ~/libslock/src/spinlock.c src/locking_scheme.cpp -o locking_scheme.spin
+
+ttas: src/locking_scheme.cpp
+	$(MAIN_PART) -DUSE_TTAS_LOCKS ~/libslock/src/ttas.c src/locking_scheme.cpp -o locking_scheme.ttas
+
 ticket: src/locking_scheme.cpp
 	$(MAIN_PART) -DUSE_TICKET_LOCKS ~/libslock/src/ticket.c src/locking_scheme.cpp -o locking_scheme.ticket
 
