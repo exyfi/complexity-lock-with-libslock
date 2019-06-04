@@ -13,6 +13,10 @@
 #include <sys/syscall.h>
 #include <atomic>
 #include <immintrin.h>
+#include <vector>
+#include <algorithm>
+#include <fstream>
+#include <chrono>
 
 #include "cache_aligned_alloc.h"
 #include "my_time.h"
@@ -23,6 +27,19 @@
 
 #define NOP __asm__ __volatile__("")
 
+unsigned long long now() {
+  struct timespec t;
+  clock_gettime(CLOCK_REALTIME, &t);
+  return t.tv_sec * 1000000000LL + t.tv_nsec;
+}
+
+long long now_chrono() {
+  auto now = std::chrono::system_clock::now();
+  auto now_ms = std::chrono::time_point_cast<std::chrono::nanoseconds>(now);
+  auto value = now_ms.time_since_epoch();
+  return value.count();
+}
+
 struct cmd_line_args_t {
   unsigned time;
   unsigned threads_count;
@@ -30,6 +47,8 @@ struct cmd_line_args_t {
   unsigned parallel_work;
   unsigned critical_work;
   std::string lock_type;
+  bool arrival_time;
+  unsigned iterations;
 };
 
 struct thread_data_t {
@@ -54,6 +73,8 @@ unsigned TIME;
 
 lock_global_data the_lock;
 
+std::vector<std::vector<long long>> arrivals;
+
 int main(int argc, char **argv) {
   args.pin_type = "greedy";
 
@@ -71,6 +92,10 @@ int main(int argc, char **argv) {
     td->finish = false;
 
     thread_data[i] = td;
+  }
+
+  if (args.arrival_time) {
+    arrivals.assign(args.threads_count, std::vector<long long>(args.iterations));
   }
 
   pthread_t* threads = (pthread_t*) cache_size_aligned_alloc(sizeof(pthread_t) * args.threads_count);
@@ -97,6 +122,21 @@ int main(int argc, char **argv) {
   }
 
   MEM_BARRIER;
+
+  if (args.arrival_time) {
+    char name[80];
+    sprintf(name, "logs/arrivals-%d-%d-%d.txt", args.threads_count, args.critical_work, args.parallel_work);
+    std::ofstream file(name);
+    std::vector<long long> u;
+    for (int i = 0; i < args.threads_count; i++) {
+      u.insert(u.end(), arrivals[i].begin(), arrivals[i].end());
+    }
+    std::sort(u.begin(), u.end());
+    for (int i = 1; i < u.size(); i++) {
+      file << u[i] - u[i - 1] << std::endl;
+    }
+    file.close();
+  }
 
   unsigned long total_iterations = 0;
 
@@ -154,6 +194,8 @@ static void parse_cmd_line_args(cmd_line_args_t &args, int argc, char **argv) {
   args.pin_type = deepsea::cmdline::parse_or_default_string("pin", "greedy");
   args.critical_work = deepsea::cmdline::parse_or_default_int("critical", 1000);
   args.parallel_work = deepsea::cmdline::parse_or_default_int("parallel", 1000);
+  args.arrival_time = deepsea::cmdline::parse_or_default_bool("arrival", true);
+  args.iterations = deepsea::cmdline::parse_or_default_int("iterations", 100000);
 
   // some argument checking, but not very extensive
   
@@ -209,12 +251,22 @@ static void* thread_fun(void* data) {
   int P = args.parallel_work;
   int C = args.critical_work;
   int iterations = 0;
+  int startup = now_chrono(); //now();
 
-  while (!thread_data->finish.load(std::memory_order_relaxed)) {
+  while (args.arrival_time || !thread_data->finish.load(std::memory_order_relaxed)) {
     iterations++;
+//    if (args.arrival_time && iterations % 1000 == 0) {
+//      std::cout << "Iterations " << iterations << std::endl;
+//    }
+    if (args.arrival_time && iterations - 1 >= arrivals[thread_data->tid].size()) {
+      break;
+    }
 
     for (int i = 0; i < P; i++) {
       NOP;
+    }
+    if (args.arrival_time) {
+      arrivals[thread_data->tid][iterations - 1] = now_chrono(); //now() - startup;
     }
 
     acquire_lock(&my_data, &the_lock);
