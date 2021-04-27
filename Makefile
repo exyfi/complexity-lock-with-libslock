@@ -30,31 +30,31 @@ COMPILE_FLAGS += -DCORE_NUM=10
 GCC := g++ -std=gnu++11
 LIBS := -lrt -pthread -lnuma
 
-INCLUDE_LIBSLOCK := ~/libslock/include/
-SRC_LIBSLOCK := ~/libslock/src/
+INCLUDE_LIBSLOCK := ./libslock/include/
+SRC_LIBSLOCK := ./libslock/src/
 INCLUDE := ./src/common/
 
 INCLUDES := -I $(INCLUDE_LIBSLOCK) -I $(SRC_LIBSLOCK) -I $(INCLUDE)
 
-MAIN_PART := $(GCC)  $(COMPILE_FLAGS) $(LIBS) $(INCLUDES)
+MAIN_PART := $(GCC)  $(COMPILE_FLAGS) $(INCLUDES)
 
-spinlock: src/locking_scheme.cpp
-	$(MAIN_PART) -DUSE_SPINLOCK_LOCKS ~/libslock/src/spinlock.c src/locking_scheme.cpp -o locking_scheme.spin
+#spinlock: src/locking_scheme.cpp
+#	$(MAIN_PART) -DUSE_SPINLOCK_LOCKS ./libslock/src/spinlock.c src/locking_scheme.cpp -o locking_scheme.spin
 
-ttas: src/locking_scheme.cpp
-	$(MAIN_PART) -DUSE_TTAS_LOCKS ~/libslock/src/ttas.c src/locking_scheme.cpp -o locking_scheme.ttas
+#ttas: src/locking_scheme.cpp
+#	$(MAIN_PART) -DUSE_TTAS_LOCKS ./libslock/src/ttas.c src/locking_scheme.cpp -o locking_scheme.ttas
 
-ticket: src/locking_scheme.cpp
-	$(MAIN_PART) -DUSE_TICKET_LOCKS ~/libslock/src/ticket.c src/locking_scheme.cpp -o locking_scheme.ticket
+#ticket: src/locking_scheme.cpp
+#	$(MAIN_PART) -DUSE_TICKET_LOCKS ./libslock/src/ticket.c src/locking_scheme.cpp -o locking_scheme.ticket
 
 #hticket: src/locking_scheme.cpp
-#	$(MAIN_PART) -DUSE_HTICKET_LOCKS ~/libslock/src/htlock.c src/locking_scheme.cpp -o locking_scheme.hticket
+#	$(MAIN_PART) -DUSE_HTICKET_LOCKS ./libslock/src/htlock.c src/locking_scheme.cpp -o locking_scheme.hticket
 
 mcs: src/locking_scheme.cpp
-	$(MAIN_PART) -DUSE_MCS_LOCKS ~/libslock/src/mcs.c src/locking_scheme.cpp -o locking_scheme.mcs
+	$(MAIN_PART) -DUSE_MCS_LOCKS ./libslock/src/mcs.c src/locking_scheme.cpp -o locking_scheme.mcs $(LIBS)
 
 clh: src/locking_scheme.cpp
-	$(MAIN_PART) -DUSE_CLH_LOCKS ~/libslock/src/clh.c src/locking_scheme.cpp -o locking_scheme.clh
+	$(MAIN_PART) -DUSE_CLH_LOCKS ./libslock/src/clh.c src/locking_scheme.cpp -o locking_scheme.clh $(LIBS)
 
 #hclh: src/locking_scheme.cpp
 #	$(MAIN_PART) -DUSE_HCLH_LOCKS ~/libslock/src/hclh.c src/locking_scheme.cpp -o locking_scheme.hclh

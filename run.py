@@ -2,19 +2,19 @@ import os
 import sys
 from math import sqrt
 from statistics import mean, stdev
-#from gplearn.genetic import SymbolicRegressor
+from gplearn.genetic import SymbolicRegressor
 
 keys = ["throughput"]
 
 src = "./locking_scheme.{}"
-lock = "ticket"
+lock = "mcs"
 
 duration = 10000
 parallel_points = [500, 1000, 5000, 10000, 50000, 100000]
 critical_points = [100, 500, 1000, 5000, 10000, 50000, 100000]
 parallel_factors = [0.1, 0.5, 1, 2, 4, 5, 10, 15, 20, 25, 30, 35, 40, 50, 80, 100, 200]
 critical_factors = [1. / 80, 1. / 50, 1. / 30, 1. / 10, 1. / 4, 1. / 2, 1, 2, 4] #[5, 10, 15, 20, 25, 30]
-proc = [5, 10, 20, 30, 39]
+proc = [5, 10, 20, 30, 31]
 
 def compile():
     command = "make {}".format(lock)
@@ -115,6 +115,7 @@ def fit_throughput():
     print(est._program)
     return
 
+#TODO константы получившейся модели
 def get_alpha():
     Cinf = max(critical_points)
 #    Pinf = int(max(parallel_factors) * Cinf)
@@ -126,6 +127,7 @@ def get_alpha():
 def queue(C, P, T):
     return max(T - 1. * P / C, 1)
 
+#TODO константы получившейся модели
 def get_M1_and_M2_and_X(alpha):
     filtered_throughputs = {}
     for setting in throughputs:
@@ -159,6 +161,7 @@ def get_M1_and_M2_and_X(alpha):
     print(best)
     return (best_M1, best_M2, best_X)
 
+#TODO константы получившейся модели
 def theoretical_throughput_full(C, P, T, alpha, M1, M2,  X):
     Cc = C + M1
     Pp = P + M2
@@ -286,8 +289,10 @@ if sys.argv[1] == "run":
     compile()
     run()
 if sys.argv[1] == "data":
+    print("len of sys.argv: ", len(sys.argv))
     all_throughputs()
     for i in range(3, len(sys.argv)):
+        print(sys.argv[i])
         data(sys.argv[i])
 if sys.argv[1] == "fit":
     all_throughputs()
