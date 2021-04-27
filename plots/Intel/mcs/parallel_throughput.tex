@@ -1,0 +1,164 @@
+\documentclass{standalone}
+\usepackage{tikz} 
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\renewcommand{\baselinestretch}{0.5}
+
+\usepackage{amssymb,amscd,amsmath, cite,multirow,tikz,pgfplots,comment}
+
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{matrix}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=newest}
+
+\begin{document}
+
+\begin{tikzpicture}
+   \begin{groupplot}[
+       group style={
+           group size= 6 by 5,
+       },
+       height=5cm,
+       width=5cm,
+   ]
+
+   \nextgroupplot[title=Parallel work: 500,
+                  ylabel={Processors: 5},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_5_500_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_5_500_mcs.dat};
+
+   \nextgroupplot[title=Parallel work: 1000, cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_5_1000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_5_1000_mcs.dat};
+
+   \nextgroupplot[title=Parallel work: 5000, cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_5_5000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_5_5000_mcs.dat};
+
+   \nextgroupplot[title=Parallel work: 10000, cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_5_10000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_5_10000_mcs.dat};
+
+   \nextgroupplot[title=Parallel work: 50000, cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_5_50000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_5_50000_mcs.dat};
+
+   \nextgroupplot[title=Parallel work: 100000, cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_5_100000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_5_100000_mcs.dat};
+
+
+
+   \nextgroupplot[ylabel={Processors: 10},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_10_500_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_10_500_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_10_1000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_10_1000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_10_5000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_10_5000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_10_10000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_10_10000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_10_50000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_10_50000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_10_100000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_10_100000_mcs.dat};
+
+
+
+   \nextgroupplot[ylabel={Processors: 20},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_20_500_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_20_500_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_20_1000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_20_1000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_20_5000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_20_5000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_20_10000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_20_10000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_20_50000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_20_50000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_20_100000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_20_100000_mcs.dat};
+
+
+
+   \nextgroupplot[ylabel={Processors: 30},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_30_500_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_30_500_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_30_1000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_30_1000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_30_5000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_30_5000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_30_10000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_30_10000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_30_50000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_30_50000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_30_100000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_30_100000_mcs.dat};
+
+
+
+   \nextgroupplot[ylabel={Processors: 31},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_31_500_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_31_500_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_31_1000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_31_1000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_31_5000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_31_5000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_31_10000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_31_10000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_31_50000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_31_50000_mcs.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/parallel_31_100000_mcs.dat};
+       \addplot table {../../../data/d10000/theoretical_throughput/parallel_31_100000_mcs.dat};
+  \end{groupplot}
+\end{tikzpicture}
+
+
+\end{document}

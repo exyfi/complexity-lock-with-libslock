@@ -1,0 +1,229 @@
+\documentclass{standalone}
+\usepackage{tikz} 
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\renewcommand{\baselinestretch}{0.5}
+
+\usepackage{amssymb,amscd,amsmath, cite,multirow,tikz,pgfplots,comment}
+
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{matrix}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=newest}
+
+\begin{document}
+
+\begin{tikzpicture}
+   \begin{groupplot}[
+       group style={
+           group size= 8 by 7
+       },
+       height=5cm,
+       width=5cm,
+   ]
+
+   \nextgroupplot[title=Parallel work: x0.1,
+                  ylabel={Critical work: 100},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100_0.1_ticket.dat};
+
+   \nextgroupplot[title=Parallel work: x1,
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100_1_ticket.dat};
+
+%   \nextgroupplot[title=Parallel work: x4,
+%                  cycle list name=color]
+%       \addplot table {../../../data/d10000/throughput/processes_100_4_ticket.dat};
+
+   \nextgroupplot[title=Parallel work: x5,
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100_5_ticket.dat};
+
+   \nextgroupplot[title=Parallel work: x10,
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100_10_ticket.dat};
+
+   \nextgroupplot[title=Parallel work: x20,
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100_20_ticket.dat};
+
+   \nextgroupplot[title=Parallel work: x30,
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100_30_ticket.dat};
+
+   \nextgroupplot[title=Parallel work: x40,
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100_40_ticket.dat};
+
+   \nextgroupplot[title=Parallel work: x80,
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100_80_ticket.dat};
+
+%%%%       500       %%%%
+
+   \nextgroupplot[ylabel={Critical work: 500},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_500_0.1_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_500_1_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_500_5_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_500_10_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_500_20_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_500_30_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_500_40_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_500_80_ticket.dat};
+
+%%%%       1000       %%%%
+
+   \nextgroupplot[ylabel={Critical work: 1000},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_1000_0.1_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_1000_1_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_1000_5_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_1000_10_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_1000_20_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_1000_30_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_1000_40_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_1000_80_ticket.dat};
+
+%%%%       5000       %%%%
+
+   \nextgroupplot[ylabel={Critical work: 5000},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_5000_0.1_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_5000_1_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_5000_5_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_5000_10_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_5000_20_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_5000_30_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_5000_40_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_5000_80_ticket.dat};
+
+
+%%%%       10000       %%%%
+
+   \nextgroupplot[ylabel={Critical work: 10000},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_10000_0.1_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_10000_1_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_10000_5_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_10000_10_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_10000_20_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_10000_30_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_10000_40_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_10000_80_ticket.dat};
+
+%%%%       50000       %%%%
+
+   \nextgroupplot[ylabel={Critical work: 50000},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_50000_0.1_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_50000_1_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_50000_5_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_50000_10_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_50000_20_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_50000_30_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_50000_40_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_50000_80_ticket.dat};
+
+%%%%       100000       %%%%
+
+   \nextgroupplot[ylabel={Critical work: 100000},
+                  cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100000_0.1_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100000_1_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100000_5_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100000_10_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100000_20_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100000_30_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100000_40_ticket.dat};
+
+   \nextgroupplot[cycle list name=color]
+       \addplot table {../../../data/d10000/throughput/processes_100000_80_ticket.dat};
+  \end{groupplot}
+\end{tikzpicture}
+
+\end{document}

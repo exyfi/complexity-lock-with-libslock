@@ -174,7 +174,7 @@ void pin(pid_t t, int cpu) {
   }
     
   int j, s;
-  s = pthread_getaffinity_np(thread, sizeof(cpu_set_t), &cpuset);
+  s = pthread_geta  ffinity_np(thread, sizeof(cpu_set_t), &cpuset);
   if (s != 0) {
 	printf("error\n" );
   } else {
@@ -194,7 +194,7 @@ static void parse_cmd_line_args(cmd_line_args_t &args, int argc, char **argv) {
   args.pin_type = deepsea::cmdline::parse_or_default_string("pin", "greedy");
   args.critical_work = deepsea::cmdline::parse_or_default_int("critical", 1000);
   args.parallel_work = deepsea::cmdline::parse_or_default_int("parallel", 1000);
-  args.arrival_time = deepsea::cmdline::parse_or_default_bool("arrival", true);
+  args.arrival_time = deepsea::cmdline::parse_or_default_bool("arrival", false);
   args.iterations = deepsea::cmdline::parse_or_default_int("iterations", 100000);
 
   // some argument checking, but not very extensive
