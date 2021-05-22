@@ -40,6 +40,15 @@ long long now_chrono() {
   return value.count();
 }
 
+struct node {
+    const int data;
+    std::atomic<node *> next;
+
+    explicit node(const int &data) : data(data), next(nullptr) {}
+};
+
+std::atomic<node *> head;
+
 struct cmd_line_args_t {
   unsigned time;
   unsigned threads_count;
@@ -268,14 +277,21 @@ static void* thread_fun(void* data) {
     if (args.arrival_time) {
       arrivals[thread_data->tid][iterations - 1] = now_chrono(); //now() - startup;
     }
-
-    acquire_lock(&my_data, &the_lock);
-
-    for (int i = 0; i < C; i++) {
-      NOP;
-    }
-
-    release_lock(&my_data, &the_lock);
+      //push ~ pop
+      node *new_head = new node(data); //пофиг
+      node *old_head = head.load(std::memory_order_relaxed);//M
+      do {
+          new_head->next = old_head;//пофиг M опять читаем
+      } while (!head.compare_exchange_weak(old_head, new_head,
+                                           std::memory_order_release,
+                                           std::memory_order_acquire));//tries * W_i
+//    acquire_lock(&my_data, &the_lock);
+//
+//    for (int i = 0; i < C; i++) {
+//      NOP;
+//    }
+//
+//    release_lock(&my_data, &the_lock);
   }
 
   thread_data->iterations = iterations;
@@ -285,3 +301,42 @@ static void* thread_fun(void* data) {
   
   return NULL;
 }
+
+class stack {
+    struct node {
+        const int data;
+        std::atomic<node *> next;
+
+        explicit node(const int &data) : data(data), next(nullptr) {}
+    };
+
+    std::atomic<node *> head;
+
+public:
+
+    void push(int data) {
+        node *new_head = new node(data); //пофиг
+        node *old_head = head.load(std::memory_order_relaxed);//M
+        do {
+            new_head->next = old_head;//пофиг M опять читаем
+        } while (!head.compare_exchange_weak(old_head, new_head,
+                                             std::memory_order_release,
+                                             std::memory_order_acquire));//tries * W_i
+    }
+
+    int pop() {
+        node *old_head;//пофиг
+        node *new_head;//пофиг
+
+        do {
+            old_head = head.load(std::memory_order_relaxed);//X or W_i or R??????????? find the real cost
+            if (old_head == nullptr) {
+                return std::numeric_limits<int>::min();//end
+            }
+            new_head = old_head->next;//M
+        } while (!head.compare_exchange_weak(old_head, new_head, std::memory_order_acquire,
+                                             std::memory_order_relaxed));//tries * W_i
+        return old_head->data;
+    }
+
+};
