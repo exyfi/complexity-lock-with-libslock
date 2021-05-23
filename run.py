@@ -245,7 +245,7 @@ def get_M1_and_M2_and_X(alpha):
 #W, M, X 15, 55, 70
 def theoretical_throughput_full_W_M_X(C, P, T, alpha, W, M, X):
     if (T-1) * (M + W) > P:
-        return alpha /(1.5*M + W)
+        return alpha /(M + W)
     else:
         return alpha * T/(P+W+M)
 
