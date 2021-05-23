@@ -1,0 +1,56 @@
+\begin{tikzpicture}
+    \begin{groupplot}[
+    group style={
+        \documentclass{standalone}
+        \usepackage{tikz}
+
+        \usepackage[T2A]{fontenc}
+        \usepackage[utf8]{inputenc}
+
+        \renewcommand{\baselinestretch}{0.5}
+
+        \usepackage{amssymb,amscd,amsmath, cite,multirow,tikz,pgfplots,comment}
+
+        \usepgfplotslibrary{fillbetween}
+        \usetikzlibrary{matrix}
+        \usepgfplotslibrary{groupplots}
+        \pgfplotsset{compat=newest}
+
+        \begin{document}
+
+            \begin{tikzpicture}
+                \begin{groupplot}[
+                    group style={
+                    group size = 3 by 1,
+                    },
+                    height=12cm,
+                    width=12cm,
+                ]
+
+                    \nextgroupplot[xlabel=Parallel work,
+                        ylabel=Processors: 5,
+                        cycle list name=color]
+                    \addplot +[mark=none] table {../../../data/d10000/throughput/critical_5_100_treiber.dat};
+                    \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_5_100_treiber.dat};
+                    \draw ({axis cs:80,0}|-{rel axis cs:0,0}) -- ({axis cs:80,0}|-{rel axis cs:0,1});
+
+                    \nextgroupplot[ylabel=Processors: 10,
+                        cycle list name=color]
+                    \addplot +[mark=none] table {../../../data/d10000/throughput/critical_10_100_treiber.dat};
+                    \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_10_100_treiber.dat};
+                    \draw ({axis cs:80,0}|-{rel axis cs:0,0}) -- ({axis cs:80,0}|-{rel axis cs:0,1});
+
+
+                    \nextgroupplot[ylabel=Processors: 15,
+                        cycle list name=color]
+                    \addplot +[mark=none] table {../../../data/d10000/throughput/critical_15_100_treiber.dat};
+                    \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_15_100_treiber.dat};
+                    \draw ({axis cs:80,0}|-{rel axis cs:0,0}) -- ({axis cs:80,0}|-{rel axis cs:0,1});
+
+                \end{groupplot}
+
+
+            \end{tikzpicture}
+
+
+\end{document}
