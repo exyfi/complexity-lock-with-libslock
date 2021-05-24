@@ -144,8 +144,6 @@ def queue(C, P, T):
 def get_W_and_R_and_X(alpha):
     filtered_throughputs = {}
     for setting in throughputs:
-        if setting[0] != 500:
-            continue
         filtered_throughputs[setting] = throughputs[setting]
 
     best = 1000000000000
@@ -178,8 +176,6 @@ def get_W_and_R_and_X(alpha):
 def get_W_and_M_and_X(alpha):
     filtered_throughputs = {}
     for setting in throughputs:
-        if setting[0] != 500:
-            continue
         filtered_throughputs[setting] = throughputs[setting]
 
     best = 1000000000000
