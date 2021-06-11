@@ -238,12 +238,12 @@ def get_M1_and_M2_and_X(alpha):
     print(best)
     return (best_M1, best_M2, best_X)
 
-#W, M, X 15, 55, 70
+#W, M 15, 30
 def theoretical_throughput_full_W_M_X(C, P, T, alpha, W, M, X):
     if (T-1) * (M + W) > P:
-        return alpha /(M + W)
+        return alpha/(M + W + X)
     else:
-        return alpha * T/(P+W+M)
+        return alpha * T/(P+M+W+X)
 
 
 def theoretical_throughput_full_W_R_X(C, P, T, alpha, W, R, X):
