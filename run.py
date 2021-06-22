@@ -270,7 +270,7 @@ def theoretical_throughput_full_W_M_X_2(C,P, T, alpha, W, M, X):
 # W, M 15, 30
 def theoretical_throughput_full_W_M_X(C, P, T, alpha, W, M, X):
     if (T - 1) * (M + W) > P:
-        return alpha / (M + W + X)
+        return alpha / (M + W)
     else:
         return alpha * T / (P + M + W + X)
 
@@ -282,10 +282,10 @@ def theoretical_throughput_full_W_R_X(C, P, T, alpha, W, R, X):
         if (T - 1) * X > Pp + Cc:
             return alpha / X
         else:
-            return alpha * T / (Pp + Cc + X)
+            return alpha * T / (Pp + Cc)
     else:
         if (T - 1) * Cc > Pp + X:
-            return alpha / (Cc + R + X)
+            return alpha / (Cc + R)
         else:
             return alpha * T / (Pp + Cc + X)
 
