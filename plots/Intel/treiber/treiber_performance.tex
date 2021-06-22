@@ -1,7 +1,7 @@
 \begin{tikzpicture}
     \begin{groupplot}[
     group style={
-        \documentclass{standalone}
+        \documentclass[margin=5mm]{standalone}
         \usepackage{tikz}
 
         \usepackage[T2A]{fontenc}
@@ -20,37 +20,57 @@
 
             \begin{tikzpicture}
                 \begin{groupplot}[
-                    group style={
+                group style={
                     group size = 3 by 1,
-                    },
-                    height=12cm,
-                    width=12cm,
+                    group name = myplot
+                },
+                horizontal sep = 2 cm,
+                vertical sep = 1 cm
+                height=12cm,
+                width=12cm,
                 ]
 
-                    \nextgroupplot[xlabel=Parallel work,
-                        ylabel=Processors: 5,
-                        cycle list name=color]
-                    \addplot +[mark=none] table {../../../data/d10000/throughput/critical_5_100_treiber.dat};
-                    \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_5_100_treiber.dat};
-                    \draw ({axis cs:80,0}|-{rel axis cs:0,0}) -- ({axis cs:80,0}|-{rel axis cs:0,1});
+                \nextgroupplot[xlabel={Parallel work, cycles},
+                    title=Threads: 5,
+                    ylabel={Throughput, op/s},
+                    cycle list name=color]
+                \addplot +[mark=none] table {../../../data/d10000/throughput/critical_5_100_treiber.dat};\label{plots:real}
+                \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_5_100_treiber.dat};\label{plots:predicted}
+                \draw ({axis cs:80,0}|-{rel axis cs:0,0}) -- ({axis cs:80,0}|-{rel axis cs:0,1});
 
-                    \nextgroupplot[ylabel=Processors: 10,
-                        cycle list name=color]
-                    \addplot +[mark=none] table {../../../data/d10000/throughput/critical_10_100_treiber.dat};
-                    \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_10_100_treiber.dat};
-                    \draw ({axis cs:80,0}|-{rel axis cs:0,0}) -- ({axis cs:80,0}|-{rel axis cs:0,1});
+                \nextgroupplot[title=Threads: 10,
+                    xlabel={Parallel work, cycles},
+                    cycle list name=color]
+                \addplot +[mark=none] table {../../../data/d10000/throughput/critical_10_100_treiber.dat};
+                \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_10_100_treiber.dat};
+                \draw ({axis cs:80,0}|-{rel axis cs:0,0}) -- ({axis cs:80,0}|-{rel axis cs:0,1});
 
 
-                    \nextgroupplot[ylabel=Processors: 15,
-                        cycle list name=color]
-                    \addplot +[mark=none] table {../../../data/d10000/throughput/critical_15_100_treiber.dat};
-                    \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_15_100_treiber.dat};
-                    \draw ({axis cs:80,0}|-{rel axis cs:0,0}) -- ({axis cs:80,0}|-{rel axis cs:0,1});
+                \nextgroupplot[title=Threads: 15,
+                    xlabel={Parallel work, cycles},
+                    cycle list name=color]
+                \addplot +[mark=none] table {../../../data/d10000/throughput/critical_15_100_treiber.dat};
+                \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_15_100_treiber.dat};
+                \draw ({axis cs:80,0}|-{rel axis cs:0,0}) -- ({axis cs:80,0}|-{rel axis cs:0,1});
 
                 \end{groupplot}
+
+                \path (myplot c1r1.north west|-current bounding box.north)--
+                coordinate(legendpos)
+                (myplot c3r1.north east|-current bounding box.north);
+                \matrix[
+                    matrix of nodes,
+                    anchor=south,
+                    draw,
+                    inner sep=0.2em,
+                    draw
+                ]at([yshift=1ex]legendpos)
+                    {
+                    \ref{plots:real}& real&[5pt]
+                    \ref{plots:predicted}& predicted\\};
 
 
             \end{tikzpicture}
 
 
-\end{document}
+        \end{document}

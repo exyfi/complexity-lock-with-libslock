@@ -1,7 +1,7 @@
 import os
 import sys
-from math import sqrt
-from statistics import mean, stdev
+from statistics import mean
+
 from gplearn.genetic import SymbolicRegressor
 
 keys = ["throughput"]
@@ -11,12 +11,14 @@ lock = "mcs"
 
 duration = 10000
 parallel_points = []  # 500, 1000, 5000, 10000, 50000, 100000]
-critical_points =  [100,500, 1000, 5000,10000,15000] #[100, 500, 1000, 5000, 10000, 50000, 100000]
-#parallel_factors = #[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
-#28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-#50]  #
-#[0.1,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.6,0.7,0.7,0.8,0.85,0.9,0.95,1,2,3,4,5]#6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-parallel_factors = [0.1, 0.2, 0.25, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9, 1, 2,2.5, 3, 3.5, 4, 5, 5.5, 6, 6.5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,21, 22, 23, 24, 25, 30]#, 50, 80, 90, 100, 150, 180, 200, 400, 800, 1000, 1200, 1400, 1600, 1800, 2000]
+critical_points = [100, 500, 1000, 5000, 10000, 15000]  # [100, 500, 1000, 5000, 10000, 50000, 100000]
+# parallel_factors = #[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
+# 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+# 50]  #
+# [0.1,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.6,0.7,0.7,0.8,0.85,0.9,0.95,1,2,3,4,5]#6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+parallel_factors = [0.1, 0.2, 0.25, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9, 1, 2, 2.5, 3, 3.5, 4, 5, 5.5, 6, 6.5,
+                    7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+                    30]  # , 50, 80, 90, 100, 150, 180, 200, 400, 800, 1000, 1200, 1400, 1600, 1800, 2000]
 critical_factors = []  # 1. / 80, 1. / 50, 1. / 30, 1. / 10, 1. / 4, 1. / 2, 1, 2, 4] #[5, 10, 15, 20, 25, 30]
 proc = [5, 10, 15]  # [5, 10, 20, 30, 31]
 
@@ -26,8 +28,10 @@ def compile():
     print(command)
     os.system(command)
 
+
 def log_file(duration, proc, critical, parallel, lock):
     return "out/log/d{}/{}_{}_{}_{}.txt".format(duration, proc, critical, parallel, lock)
+
 
 def run_one(duration, proc, critical, parallel, lock):
     out = log_file(duration, proc, critical, parallel, lock)
@@ -138,8 +142,10 @@ def get_alpha():
     THRinf = mean(parse(log_file(duration, Tinf, Cinf, Pinf, lock))["throughput"])
     return THRinf * (Cinf + Pinf) / Tinf
 
+
 def queue(C, P, T):
     return max(T - 1. * P / C, 1)
+
 
 def get_W_and_R_and_X(alpha):
     filtered_throughputs = {}
@@ -238,12 +244,35 @@ def get_M1_and_M2_and_X(alpha):
     print(best)
     return (best_M1, best_M2, best_X)
 
-#W, M 15, 30
-def theoretical_throughput_full_W_M_X(C, P, T, alpha, W, M, X):
-    if (T-1) * (M + W) > P:
-        return alpha/(M + W + X)
+
+def find_min_T(T, P, M, W, X):
+    a = []
+    candidate = 0
+    for i in range(1, T + 1):
+        if (P > i * (M + W + X)):
+            candidate = i
+        else:
+            break
+    return candidate
+
+
+def theoretical_throughput_full_W_M_X_2(C,P, T, alpha, W, M, X):
+    # find the correlation between P and T
+    if (T - 1) * (M + W) < P:
+        Tt = find_min_T(T, P, W, M, X)
+        if Tt == 0:
+            return alpha / (M + W + X)
+        return alpha * Tt / (P + M + W + X)
     else:
-        return alpha * T/(P+M+W+X)
+        return alpha * T / (P + M + W + X)
+
+
+# W, M 15, 30
+def theoretical_throughput_full_W_M_X(C, P, T, alpha, W, M, X):
+    if (T - 1) * (M + W) > P:
+        return alpha / (M + W + X)
+    else:
+        return alpha * T / (P + M + W + X)
 
 
 def theoretical_throughput_full_W_R_X(C, P, T, alpha, W, R, X):
@@ -276,12 +305,28 @@ def theoretical_throughput_full(C, P, T, alpha, M1, M2, X):
             return alpha * T / (Pp + Cc + X)
 
 
+def tts_throughput(C, P, T, alpha, W, R, X):
+    Cc = R + 2 * W + C
+    # TODO need to check
+    if (T - 1) * Cc > P + X:
+        return alpha / Cc
+    else:
+        return alpha * T / (P + Cc + X)
+
+
+def test_and_test_and_set_theoretical(C, P, T, alpha, W, R, X):
+    return tts_throughput(C, P, T, alpha, W, R, X)
+
+
 def theoretical(C, P, T, alpha, W, R, X):
     return theoretical_throughput_full_W_R_X(C, P, T, alpha, W, R, X)
 
 
-def theoretical_treiber(P, T, alpha, W, M, X):
-    return theoretical_throughput_full_W_M_X(0, P, T, alpha, W, M, X)
+def theoretical_treiber(P, T, alpha, W, M, X, version):
+    if version == 1:
+        return theoretical_throughput_full_W_M_X(0, P, T, alpha, W, M, X)
+    else:
+        return theoretical_throughput_full_W_M_X_2(0, P, T, alpha, W, M, X)
 
 
 def theoretical_throughput(C, P, T, alpha, M1, M2, X):
@@ -405,7 +450,7 @@ def data_treiber(key):
                     if not exists(critical, parallel, p, lock):
                         continue
 
-                    t = theoretical_treiber(parallel, p, alpha, W, M, X)
+                    t = theoretical_treiber(parallel, p, alpha, W, M, X, version=1)
 
                     out.write("{} {}\n".format(parallel, t))
                 out.close()

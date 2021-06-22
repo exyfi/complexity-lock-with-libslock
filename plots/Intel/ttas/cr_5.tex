@@ -1,0 +1,86 @@
+\begin{tikzpicture}
+    \begin{groupplot}[
+    group style={
+        \documentclass[margin=5mm]{standalone}
+        \usepackage{tikz}
+
+        \usepackage[T2A]{fontenc}
+        \usepackage[utf8]{inputenc}
+
+        \renewcommand{\baselinestretch}{0.5}
+
+        \usepackage{amssymb,amscd,amsmath, cite,multirow,tikz,pgfplots,comment}
+
+        \usepgfplotslibrary{fillbetween}
+        \usetikzlibrary{matrix}
+        \usepgfplotslibrary{groupplots}
+        \pgfplotsset{compat=newest}
+
+        \begin{document}
+
+            \begin{tikzpicture}
+                \begin{groupplot}[
+                    group style={
+                    group name = myplot,
+                    group size = 5 by 1,
+                    horizontal sep = 1 cm,
+                    vertical sep = 1 cm
+                    },
+                    xlabel = {Parallel work, cycles},
+                    height=7cm,
+                    width=7cm,
+                ]
+
+                    \nextgroupplot[title=Critical work: 500,
+                        ylabel={Throughput, op/s},
+                        cycle list name=color]
+                    \addplot +[mark=none] table {../../../data/d10000/throughput/critical_5_500_ttas.dat};
+                    \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_5_500_ttas.dat};
+
+
+                    \nextgroupplot[title=Critical work: 1000,
+                        cycle list name=color]
+                    \addplot +[mark=none] table {../../../data/d10000/throughput/critical_5_1000_ttas.dat};\label{plots:real}
+                    \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_5_1000_ttas.dat};\label{plots:predicted}
+
+                    \nextgroupplot[title=Critical work: 5000,
+                        cycle list name=color]
+                    \addplot +[mark=none] table {../../../data/d10000/throughput/critical_5_5000_ttas.dat};
+                    \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_5_5000_ttas.dat};
+
+                    \nextgroupplot[title=Critical work: 10000,
+                        cycle list name=color]
+                    \addplot +[mark=none] table {../../../data/d10000/throughput/critical_5_10000_ttas.dat};
+                    \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_5_10000_ttas.dat};
+
+                    \nextgroupplot[title=Critical work: 15000,
+                        cycle list name=color]
+                    \addplot +[mark=none] table {../../../data/d10000/throughput/critical_5_15000_ttas.dat};
+                    \addplot +[mark=none] table {../../../data/d10000/theoretical_throughput/critical_5_15000_ttas.dat};
+
+                \end{groupplot}
+                \path (myplot c1r1.outer north west)% plot in column 1 row 1
+                -- node[anchor=south] {}% label midway
+                %(myplot c1r5.outer south west)% plot in column 1 row 4
+                ;
+
+% legend
+                \path (myplot c1r1.north west|-current bounding box.north)--
+                coordinate(legendpos)
+                (myplot c5r1.north east|-current bounding box.north);
+                \matrix[
+                    matrix of nodes,
+                    anchor=south,
+                    draw,
+                    inner sep=0.2em,
+                    draw
+                ]at([yshift=1ex]legendpos)
+                    {
+                    \ref{plots:real}& real&[5pt]
+                    \ref{plots:predicted}& predicted\\};
+
+
+            \end{tikzpicture}
+
+
+        \end{document}
